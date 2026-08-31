@@ -5,6 +5,8 @@ import com.bhaskar.userservice.dtos.LoginResponseDto;
 import com.bhaskar.userservice.dtos.ResponseStatus;
 import com.bhaskar.userservice.dtos.SignUpRequestDto;
 import com.bhaskar.userservice.dtos.SignUpResponseDto;
+import com.bhaskar.userservice.exceptions.UserNotFoundException;
+import com.bhaskar.userservice.exceptions.WrongPasswordException;
 import com.bhaskar.userservice.services.AuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -41,16 +43,33 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
-        log.info("Login request received for email: " + loginRequestDto.getEmail());
-        String token = authService.login(loginRequestDto.getEmail(), loginRequestDto.getPassword());
         LoginResponseDto loginResponseDto = new LoginResponseDto();
-        loginResponseDto.setStatus(ResponseStatus.SUCCESS);
-        HttpHeaders headers = new HttpHeaders();
-        if (token == null) {
+        try {
+            log.info("Login request received for email: " + loginRequestDto.getEmail());
+            String token = authService.login(loginRequestDto.getEmail(), loginRequestDto.getPassword());
+            loginResponseDto.setStatus(ResponseStatus.SUCCESS);
+            loginResponseDto.setMessage("Login successful");
+            HttpHeaders headers = new HttpHeaders();
+            if (token == null) {
+                loginResponseDto.setMessage("Login unsuccessful");
+                loginResponseDto.setStatus(ResponseStatus.FAILURE);
+                return new ResponseEntity<>(loginResponseDto, headers, HttpStatus.UNAUTHORIZED);
+            }
+            headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+            return new ResponseEntity<>(loginResponseDto, headers, HttpStatus.OK);
+        } catch (UserNotFoundException e) {
+            loginResponseDto.setMessage("User not found: " + e.getMessage());
             loginResponseDto.setStatus(ResponseStatus.FAILURE);
-            return new ResponseEntity<>(loginResponseDto, headers, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(loginResponseDto, HttpStatus.NOT_FOUND);
+        } catch (WrongPasswordException e) {
+            loginResponseDto.setMessage("Incorrect password, try again");
+            loginResponseDto.setStatus(ResponseStatus.FAILURE);
+            return new ResponseEntity<>(loginResponseDto, HttpStatus.UNAUTHORIZED);
         }
-        headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + token);
-        return new ResponseEntity<>(loginResponseDto, headers, HttpStatus.OK);
+        catch (Exception e) {
+            log.error("Error occurred while logging in: " + e.getMessage());
+            loginResponseDto.setStatus(ResponseStatus.FAILURE);
+            return new ResponseEntity<>(loginResponseDto, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
