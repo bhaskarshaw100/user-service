@@ -72,4 +72,9 @@ public class AuthController {
             return new ResponseEntity<>(loginResponseDto, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/validate")
+    public Boolean validateToken(@RequestParam("token") String token) {
+        return authService.validateJwtToken(token);
+    }
 }
