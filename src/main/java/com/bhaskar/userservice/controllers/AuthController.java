@@ -6,11 +6,13 @@ import com.bhaskar.userservice.dtos.ResponseStatus;
 import com.bhaskar.userservice.dtos.SignUpRequestDto;
 import com.bhaskar.userservice.dtos.SignUpResponseDto;
 import com.bhaskar.userservice.services.AuthService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController {
@@ -39,6 +41,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
+        log.info("Login request received for email: " + loginRequestDto.getEmail());
         String token = authService.login(loginRequestDto.getEmail(), loginRequestDto.getPassword());
         LoginResponseDto loginResponseDto = new LoginResponseDto();
         loginResponseDto.setStatus(ResponseStatus.SUCCESS);

@@ -28,7 +28,7 @@ public class AuthService {
         try {
             User user = new User();
             user.setEmail(email);
-            user.setPassword(password);
+            user.setPassword(bCryptPasswordEncoder.encode(password));
             userRepository.save(user);
         } catch (Exception e) {
             throw new Exception("Error occurred while saving user: " + e.getMessage());
