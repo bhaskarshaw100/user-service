@@ -10,11 +10,13 @@ import com.bhaskar.userservice.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @Slf4j
@@ -24,7 +26,8 @@ public class AuthService {
     UserRepository userRepository;
     SessionRepository sessionRepository;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final SecretKey key = Jwts.SIG.HS256.key().build();
+//    private final SecretKey key = Jwts.SIG.HS256.key().build();
+    private SecretKey key = Keys.hmacShaKeyFor("BhaskarShawWorkingInJavaProjectForMakingALivingOutOfIt".getBytes(StandardCharsets.UTF_8));
 
     public AuthService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, SessionRepository sessionRepository) {
         this.userRepository = userRepository;
