@@ -2,24 +2,52 @@ package com.bhaskar.userservice.controllers;
 
 import com.bhaskar.userservice.dtos.LoginRequestDto;
 import com.bhaskar.userservice.dtos.LoginResponseDto;
+import com.bhaskar.userservice.dtos.ResponseStatus;
 import com.bhaskar.userservice.dtos.SignUpRequestDto;
 import com.bhaskar.userservice.dtos.SignUpResponseDto;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.bhaskar.userservice.services.AuthService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController {
+    private AuthService authService;
+
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
 
     @PostMapping("/signup")
-    public SignUpResponseDto singUp(@RequestBody SignUpRequestDto signUpRequestDto) {
-        return new SignUpResponseDto();
+    public ResponseEntity<SignUpResponseDto> singUp(@RequestBody SignUpRequestDto signUpRequestDto) {
+        SignUpResponseDto signUpResponseDto = new SignUpResponseDto();
+        try {
+            boolean isSignedUp = authService.signUp(signUpRequestDto.getEmail(), signUpRequestDto.getPassword());
+            if  (!isSignedUp) {
+                signUpResponseDto.setStatus(ResponseStatus.FAILURE);
+                return new ResponseEntity<>(signUpResponseDto, HttpStatus.CONFLICT);
+            }
+            signUpResponseDto.setStatus(ResponseStatus.SUCCESS);
+            return new ResponseEntity<>(signUpResponseDto, HttpStatus.CREATED);
+        } catch (Exception e) {
+            signUpResponseDto.setStatus(ResponseStatus.FAILURE);
+            return new ResponseEntity<>(signUpResponseDto, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/login")
-    public LoginResponseDto login(@RequestBody LoginRequestDto loginRequestDto) {
-        return new LoginResponseDto();
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
+        String token = authService.login(loginRequestDto.getEmail(), loginRequestDto.getPassword());
+        LoginResponseDto loginResponseDto = new LoginResponseDto();
+        loginResponseDto.setStatus(ResponseStatus.SUCCESS);
+        HttpHeaders headers = new HttpHeaders();
+        if (token == null) {
+            loginResponseDto.setStatus(ResponseStatus.FAILURE);
+            return new ResponseEntity<>(loginResponseDto, headers, HttpStatus.UNAUTHORIZED);
+        }
+        headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+        return new ResponseEntity<>(loginResponseDto, headers, HttpStatus.OK);
     }
 }
