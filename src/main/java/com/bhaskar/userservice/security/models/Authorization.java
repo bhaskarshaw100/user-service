@@ -10,64 +10,111 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "`authorization`")
 public class Authorization {
+
     @Id
-    @Column
+    @Column(length = 255, nullable = false)
     private String id;
+
+    @Column(length = 255)
     private String registeredClientId;
+
+    @Column(length = 255)
     private String principalName;
+
+    @Column(length = 255)
     private String authorizationGrantType;
+
     @Column(length = 1000)
     private String authorizedScopes;
-    @Column(length = 4000)
+
+    @Column(columnDefinition = "TEXT")
     private String attributes;
+
     @Column(length = 500)
     private String state;
 
-    @Column(length = 4000)
+    // Authorization Code
+
+    @Column(columnDefinition = "TEXT")
     private String authorizationCodeValue;
+
     private Instant authorizationCodeIssuedAt;
+
     private Instant authorizationCodeExpiresAt;
+
+    @Column(columnDefinition = "TEXT")
     private String authorizationCodeMetadata;
 
-    @Column(length = 4000)
+    // Access Token
+
+    @Column(columnDefinition = "TEXT")
     private String accessTokenValue;
+
     private Instant accessTokenIssuedAt;
+
     private Instant accessTokenExpiresAt;
-    @Column(length = 2000)
+
+    @Column(columnDefinition = "TEXT")
     private String accessTokenMetadata;
+
+    @Column(length = 255)
     private String accessTokenType;
+
     @Column(length = 1000)
     private String accessTokenScopes;
 
-    @Column(length = 4000)
+    // Refresh Token
+
+    @Column(columnDefinition = "TEXT")
     private String refreshTokenValue;
+
     private Instant refreshTokenIssuedAt;
+
     private Instant refreshTokenExpiresAt;
-    @Column(length = 2000)
+
+    @Column(columnDefinition = "TEXT")
     private String refreshTokenMetadata;
 
-    @Column(length = 4000)
+    // OIDC ID Token
+
+    @Column(columnDefinition = "TEXT")
     private String oidcIdTokenValue;
+
     private Instant oidcIdTokenIssuedAt;
+
     private Instant oidcIdTokenExpiresAt;
-    @Column(length = 2000)
+
+    @Column(columnDefinition = "TEXT")
     private String oidcIdTokenMetadata;
-    @Column(length = 2000)
+
+    @Column(columnDefinition = "TEXT")
     private String oidcIdTokenClaims;
 
-    @Column(length = 4000)
+    // User Code
+
+    @Column(columnDefinition = "TEXT")
     private String userCodeValue;
+
     private Instant userCodeIssuedAt;
+
     private Instant userCodeExpiresAt;
-    @Column(length = 2000)
+
+    @Column(columnDefinition = "TEXT")
     private String userCodeMetadata;
 
-    @Column(length = 4000)
+    // Device Code
+
+    @Column(columnDefinition = "TEXT")
     private String deviceCodeValue;
+
     private Instant deviceCodeIssuedAt;
+
     private Instant deviceCodeExpiresAt;
-    @Column(length = 2000)
+
+    @Column(columnDefinition = "TEXT")
     private String deviceCodeMetadata;
+
+    // Getters and Setters
 
     public String getId() {
         return id;
@@ -102,7 +149,7 @@ public class Authorization {
     }
 
     public String getAuthorizedScopes() {
-        return this.authorizedScopes;
+        return authorizedScopes;
     }
 
     public void setAuthorizedScopes(String authorizedScopes) {
@@ -129,8 +176,8 @@ public class Authorization {
         return authorizationCodeValue;
     }
 
-    public void setAuthorizationCodeValue(String authorizationCode) {
-        this.authorizationCodeValue = authorizationCode;
+    public void setAuthorizationCodeValue(String authorizationCodeValue) {
+        this.authorizationCodeValue = authorizationCodeValue;
     }
 
     public Instant getAuthorizationCodeIssuedAt() {
@@ -161,8 +208,8 @@ public class Authorization {
         return accessTokenValue;
     }
 
-    public void setAccessTokenValue(String accessToken) {
-        this.accessTokenValue = accessToken;
+    public void setAccessTokenValue(String accessTokenValue) {
+        this.accessTokenValue = accessTokenValue;
     }
 
     public Instant getAccessTokenIssuedAt() {
@@ -209,8 +256,8 @@ public class Authorization {
         return refreshTokenValue;
     }
 
-    public void setRefreshTokenValue(String refreshToken) {
-        this.refreshTokenValue = refreshToken;
+    public void setRefreshTokenValue(String refreshTokenValue) {
+        this.refreshTokenValue = refreshTokenValue;
     }
 
     public Instant getRefreshTokenIssuedAt() {
@@ -241,44 +288,44 @@ public class Authorization {
         return oidcIdTokenValue;
     }
 
-    public void setOidcIdTokenValue(String idToken) {
-        this.oidcIdTokenValue = idToken;
+    public void setOidcIdTokenValue(String oidcIdTokenValue) {
+        this.oidcIdTokenValue = oidcIdTokenValue;
     }
 
     public Instant getOidcIdTokenIssuedAt() {
         return oidcIdTokenIssuedAt;
     }
 
-    public void setOidcIdTokenIssuedAt(Instant idTokenIssuedAt) {
-        this.oidcIdTokenIssuedAt = idTokenIssuedAt;
+    public void setOidcIdTokenIssuedAt(Instant oidcIdTokenIssuedAt) {
+        this.oidcIdTokenIssuedAt = oidcIdTokenIssuedAt;
     }
 
     public Instant getOidcIdTokenExpiresAt() {
         return oidcIdTokenExpiresAt;
     }
 
-    public void setOidcIdTokenExpiresAt(Instant idTokenExpiresAt) {
-        this.oidcIdTokenExpiresAt = idTokenExpiresAt;
+    public void setOidcIdTokenExpiresAt(Instant oidcIdTokenExpiresAt) {
+        this.oidcIdTokenExpiresAt = oidcIdTokenExpiresAt;
     }
 
     public String getOidcIdTokenMetadata() {
         return oidcIdTokenMetadata;
     }
 
-    public void setOidcIdTokenMetadata(String idTokenMetadata) {
-        this.oidcIdTokenMetadata = idTokenMetadata;
+    public void setOidcIdTokenMetadata(String oidcIdTokenMetadata) {
+        this.oidcIdTokenMetadata = oidcIdTokenMetadata;
     }
 
     public String getOidcIdTokenClaims() {
         return oidcIdTokenClaims;
     }
 
-    public void setOidcIdTokenClaims(String idTokenClaims) {
-        this.oidcIdTokenClaims = idTokenClaims;
+    public void setOidcIdTokenClaims(String oidcIdTokenClaims) {
+        this.oidcIdTokenClaims = oidcIdTokenClaims;
     }
 
     public String getUserCodeValue() {
-        return this.userCodeValue;
+        return userCodeValue;
     }
 
     public void setUserCodeValue(String userCodeValue) {
@@ -286,7 +333,7 @@ public class Authorization {
     }
 
     public Instant getUserCodeIssuedAt() {
-        return this.userCodeIssuedAt;
+        return userCodeIssuedAt;
     }
 
     public void setUserCodeIssuedAt(Instant userCodeIssuedAt) {
@@ -294,7 +341,7 @@ public class Authorization {
     }
 
     public Instant getUserCodeExpiresAt() {
-        return this.userCodeExpiresAt;
+        return userCodeExpiresAt;
     }
 
     public void setUserCodeExpiresAt(Instant userCodeExpiresAt) {
@@ -302,7 +349,7 @@ public class Authorization {
     }
 
     public String getUserCodeMetadata() {
-        return this.userCodeMetadata;
+        return userCodeMetadata;
     }
 
     public void setUserCodeMetadata(String userCodeMetadata) {
@@ -310,7 +357,7 @@ public class Authorization {
     }
 
     public String getDeviceCodeValue() {
-        return this.deviceCodeValue;
+        return deviceCodeValue;
     }
 
     public void setDeviceCodeValue(String deviceCodeValue) {
@@ -318,7 +365,7 @@ public class Authorization {
     }
 
     public Instant getDeviceCodeIssuedAt() {
-        return this.deviceCodeIssuedAt;
+        return deviceCodeIssuedAt;
     }
 
     public void setDeviceCodeIssuedAt(Instant deviceCodeIssuedAt) {
@@ -326,7 +373,7 @@ public class Authorization {
     }
 
     public Instant getDeviceCodeExpiresAt() {
-        return this.deviceCodeExpiresAt;
+        return deviceCodeExpiresAt;
     }
 
     public void setDeviceCodeExpiresAt(Instant deviceCodeExpiresAt) {
@@ -334,7 +381,7 @@ public class Authorization {
     }
 
     public String getDeviceCodeMetadata() {
-        return this.deviceCodeMetadata;
+        return deviceCodeMetadata;
     }
 
     public void setDeviceCodeMetadata(String deviceCodeMetadata) {
